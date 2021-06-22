@@ -1,9 +1,14 @@
 import { useState } from "react";
 import "./App.css";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 export const App = () => {
   const [month, setMonth] = useState(0);
-  const [virtStorage, setVirtStorage] = useState({ ...window.localStorage });
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const arr = new Array(new Date(2021, month + 1, 0).getDate()).fill("");
   return (
     <div className="App ">
@@ -44,38 +49,79 @@ export const App = () => {
         >
           {arr.map((_, i) => {
             const date = new Date(2021, month, i + 1);
-
             return (
-              <div
-                onClick={() => {
-                  if (virtStorage[date.toLocaleDateString()]) {
-                    setVirtStorage({
-                      ...virtStorage,
-                      [date.toLocaleDateString()]: "",
-                    });
-                    window.localStorage.setItem(date.toLocaleDateString(), "");
-                  } else {
-                    setVirtStorage({
-                      ...virtStorage,
-                      [date.toLocaleDateString()]: "Zahnarzt um 16:00",
-                    });
-                    window.localStorage.setItem(
-                      date.toLocaleDateString(),
-                      "Zahnarzt um 16:00"
-                    );
-                  }
-                }}
-                className="Calendar-Item"
+              <CalendarItem
+                dialogOpen={dialogOpen}
+                setDialogOpen={setDialogOpen}
                 key={i}
-              >
-                {date.toLocaleDateString()}
-                <br></br>
-                {virtStorage[date.toLocaleDateString()]}
-              </div>
+                date={date}
+              ></CalendarItem>
             );
           })}
         </div>
       </div>
+      <CalendarDialog
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      ></CalendarDialog>
+    </div>
+  );
+};
+
+const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
+  const [text, setText] = useState("");
+  return (
+    <Dialog
+      onClose={() => {
+        //
+        setDialogOpen(false);
+      }}
+      open={dialogOpen}
+    >
+      <DialogTitle style={{ textAlign: "center" }}>
+        Set backup account
+      </DialogTitle>
+      <div style={{ margin: 100 }}>
+        <TextField
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+          }}
+          multiline
+          label="Termin"
+        />
+      </div>
+      <Button variant="contained" color="secondary" style={{ margin: 15 }}>
+        Speichern
+      </Button>
+    </Dialog>
+  );
+};
+
+const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
+  const [virtKey, setVirtKey] = useState(
+    window.localStorage.getItem(date.toLocaleDateString()) || null
+  );
+  return (
+    <div
+      onClick={() => {
+        if (virtKey !== null) {
+          setVirtKey(null);
+          window.localStorage.removeItem(date.toLocaleDateString());
+        } else {
+          setDialogOpen(true);
+          // setVirtKey("Zahnarzt um 16:00");
+          // window.localStorage.setItem(
+          //   date.toLocaleDateString(),
+          //   "Zahnarzt um 16:00"
+          // );
+        }
+      }}
+      className="Calendar-Item"
+    >
+      {date.toLocaleDateString()}
+      <br></br>
+      {virtKey}
     </div>
   );
 };

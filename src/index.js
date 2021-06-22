@@ -3,11 +3,29 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import { App } from "./App2";
 import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { combineReducers, createStore } from "redux";
+
+const store = createStore(
+  combineReducers({
+    eventsByDate: (state = { irgendwas: "test" }, action) => {
+      switch (action.type) {
+        case "UPDATE_CALENDAR_DATA":
+          return { ...state, [action.payload.id]: action.payload };
+        default:
+          return state;
+      }
+    },
+  }),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
+  // </React.StrictMode>
   document.getElementById("root")
 );
 
