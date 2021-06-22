@@ -3,6 +3,7 @@ import "./App.css";
 
 export const App = () => {
   const [month, setMonth] = useState(0);
+  const [virtStorage, setVirtStorage] = useState({ ...window.localStorage });
   const arr = new Array(new Date(2021, month + 1, 0).getDate()).fill("");
   return (
     <div className="App ">
@@ -43,17 +44,33 @@ export const App = () => {
         >
           {arr.map((_, i) => {
             const date = new Date(2021, month, i + 1);
+
             return (
               <div
-                key={i}
-                style={{
-                  width: 120,
-                  height: 120,
-                  backgroundColor: "black",
-                  margin: 6,
+                onClick={() => {
+                  if (virtStorage[date.toLocaleDateString()]) {
+                    setVirtStorage({
+                      ...virtStorage,
+                      [date.toLocaleDateString()]: "",
+                    });
+                    window.localStorage.setItem(date.toLocaleDateString(), "");
+                  } else {
+                    setVirtStorage({
+                      ...virtStorage,
+                      [date.toLocaleDateString()]: "Zahnarzt um 16:00",
+                    });
+                    window.localStorage.setItem(
+                      date.toLocaleDateString(),
+                      "Zahnarzt um 16:00"
+                    );
+                  }
                 }}
+                className="Calendar-Item"
+                key={i}
               >
                 {date.toLocaleDateString()}
+                <br></br>
+                {virtStorage[date.toLocaleDateString()]}
               </div>
             );
           })}

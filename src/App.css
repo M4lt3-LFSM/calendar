@@ -3,6 +3,17 @@
   text-align: center;
 }
 
+.Calendar-Item {
+  width: 120px;
+  height: 120px;
+  background-color: black;
+  margin: 5px;
+  cursor: pointer;
+}
+.Calendar-Item:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 .month-select {
   color: rgb(0, 247, 255);
   border-radius: 50%;
