@@ -11,7 +11,16 @@ const store = createStore(
     eventsByDate: (state = {}, action) => {
       switch (action.type) {
         case "UPDATE_CALENDAR_DATA":
-          return { ...state, [action.payload.id]: action.payload };
+          return {
+            ...state,
+            [action.payload.id]: {
+              ...action.payload,
+              text: [
+                ...(state[action.payload.id]?.text ?? []),
+                action.payload.text,
+              ],
+            },
+          };
         default:
           return state;
       }

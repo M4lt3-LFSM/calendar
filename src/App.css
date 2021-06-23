@@ -4,6 +4,7 @@
 }
 
 .Calendar-Item {
+  overflow: auto;
   width: 120px;
   height: 120px;
   background-color: black;
