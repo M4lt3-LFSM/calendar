@@ -15,7 +15,7 @@ export const App = () => {
     <div className="App ">
       <div>
         <h1>Kalender</h1>
-        <label>Choose a month:</label>
+        <label>Wähle einen Monat:</label>
         <p id="Dropdown">
           <select
             onChange={(e) => {
@@ -71,11 +71,19 @@ export const App = () => {
 
 const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
   const [text, setText] = useState("");
+  const currentDate = useSelector((state) => state.currentDate);
   const dispatch = useDispatch();
   const handleBtnClick = () => {
-    dispatch({ type: "fdgfdhgk" });
+    dispatch({
+      type: "UPDATE_CALENDAR_DATA",
+      payload: {
+        id: currentDate.toLocaleDateString(),
+        date: currentDate,
+        text: text,
+      },
+    });
+    setText("");
   };
-  const currentDate = useSelector((state) => state.currentDate);
   return (
     <Dialog
       onClose={() => {
@@ -87,7 +95,7 @@ const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
       open={currentDate !== null}
     >
       <DialogTitle style={{ textAlign: "center" }}>
-        Set backup account
+        Termin für den {currentDate?.toLocaleDateString()}
       </DialogTitle>
       <div style={{ margin: 100 }}>
         <TextField
@@ -112,8 +120,11 @@ const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
 };
 
 const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
-  const [virtKey, setVirtKey] = useState(
-    window.localStorage.getItem(date.toLocaleDateString()) || null
+  // const [virtKey, setVirtKey] = useState(
+  //   window.localStorage.getItem(date.toLocaleDateString()) || null
+  // );
+  const textArr = useSelector(
+    (state) => state.eventsByDate[date.toLocaleDateString()]?.text ?? []
   );
   const dispatch = useDispatch();
   return (
@@ -138,8 +149,9 @@ const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
       className="Calendar-Item"
     >
       {date.toLocaleDateString()}
-      <br></br>
-      {virtKey}
+      {textArr.map((text, index) => (
+        <p key={index}>{text}</p>
+      ))}
     </div>
   );
 };
