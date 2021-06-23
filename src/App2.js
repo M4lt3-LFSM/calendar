@@ -4,6 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import { useDispatch, useSelector } from "react-redux";
 
 export const App = () => {
   const [month, setMonth] = useState(0);
@@ -70,13 +71,20 @@ export const App = () => {
 
 const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
   const [text, setText] = useState("");
+  const dispatch = useDispatch();
+  const handleBtnClick = () => {
+    dispatch({ type: "fdgfdhgk" });
+  };
+  const currentDate = useSelector((state) => state.currentDate);
   return (
     <Dialog
       onClose={() => {
-        //
-        setDialogOpen(false);
+        dispatch({
+          type: "CHANGE_CURRENT_DATE",
+          payload: { date: null },
+        });
       }}
-      open={dialogOpen}
+      open={currentDate !== null}
     >
       <DialogTitle style={{ textAlign: "center" }}>
         Set backup account
@@ -91,7 +99,12 @@ const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
           label="Termin"
         />
       </div>
-      <Button variant="contained" color="secondary" style={{ margin: 15 }}>
+      <Button
+        onClick={handleBtnClick}
+        variant="contained"
+        color="secondary"
+        style={{ margin: 15 }}
+      >
         Speichern
       </Button>
     </Dialog>
@@ -102,20 +115,25 @@ const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
   const [virtKey, setVirtKey] = useState(
     window.localStorage.getItem(date.toLocaleDateString()) || null
   );
+  const dispatch = useDispatch();
   return (
     <div
       onClick={() => {
-        if (virtKey !== null) {
-          setVirtKey(null);
-          window.localStorage.removeItem(date.toLocaleDateString());
-        } else {
-          setDialogOpen(true);
-          // setVirtKey("Zahnarzt um 16:00");
-          // window.localStorage.setItem(
-          //   date.toLocaleDateString(),
-          //   "Zahnarzt um 16:00"
-          // );
-        }
+        dispatch({
+          type: "CHANGE_CURRENT_DATE",
+          payload: { date },
+        });
+        // if (virtKey !== null) {
+        //   setVirtKey(null);
+        //   window.localStorage.removeItem(date.toLocaleDateString());
+        // } else {
+        //   setDialogOpen(true);
+        //   // setVirtKey("Zahnarzt um 16:00");
+        //   // window.localStorage.setItem(
+        //   //   date.toLocaleDateString(),
+        //   //   "Zahnarzt um 16:00"
+        //   // );
+        // }
       }}
       className="Calendar-Item"
     >

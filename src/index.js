@@ -8,10 +8,18 @@ import { combineReducers, createStore } from "redux";
 
 const store = createStore(
   combineReducers({
-    eventsByDate: (state = { irgendwas: "test" }, action) => {
+    eventsByDate: (state = {}, action) => {
       switch (action.type) {
         case "UPDATE_CALENDAR_DATA":
           return { ...state, [action.payload.id]: action.payload };
+        default:
+          return state;
+      }
+    },
+    currentDate: (state = null, action) => {
+      switch (action.type) {
+        case "CHANGE_CURRENT_DATE":
+          return action.payload.date;
         default:
           return state;
       }
