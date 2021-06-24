@@ -37,14 +37,17 @@ const theme = createTheme({
   },
 });
 
+const initialEventsByDate =
+  JSON.parse(window.localStorage.getItem("eventsByDate")) || {};
+
 const store = createStore(
   combineReducers({
-    eventsByDate: (state = {}, action) => {
+    eventsByDate: (state = initialEventsByDate, action) => {
       switch (action.type) {
         case "UPDATE_CALENDAR_DATA":
           if (state[action.payload.id]?.text.includes(action.payload.text))
             return state;
-          return {
+          const updatedState = {
             ...state,
             [action.payload.id]: {
               ...action.payload,
@@ -54,12 +57,21 @@ const store = createStore(
               ],
             },
           };
+          window.localStorage.setItem(
+            "eventsByDate",
+            JSON.stringify(updatedState)
+          );
+          return updatedState;
         case "DELETE_CALENDAR_DATA":
-          const newState = { ...state };
-          newState[action.payload.id].text = newState[
+          const deletedState = { ...state };
+          deletedState[action.payload.id].text = deletedState[
             action.payload.id
           ].text.filter((x) => x !== action.payload.text);
-          return newState;
+          window.localStorage.setItem(
+            "eventsByDate",
+            JSON.stringify(deletedState)
+          );
+          return deletedState;
         default:
           return state;
       }
