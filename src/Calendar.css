@@ -4,15 +4,22 @@
 }
 
 .Calendar-Item {
-  overflow: auto;
-  width: 120px;
+  overflow: hidden;
   height: 120px;
+  width: -webkit-fill-available;
   background-color: black;
   margin: 5px;
   cursor: pointer;
 }
 .Calendar-Item:hover {
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.Grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin: auto;
+  display: grid;
+  justify-items: center;
 }
 
 .month-select {

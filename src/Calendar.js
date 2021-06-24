@@ -1,12 +1,12 @@
 import { useState } from "react";
-import "./App.css";
+import "./Calendar.css";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 
-export const App = () => {
+export const Calendar = () => {
   const [month, setMonth] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -39,15 +39,7 @@ export const App = () => {
             <option value={11}>Dezember</option>
           </select>
         </p>
-        <div
-          style={{
-            margin: "auto",
-            display: "flex",
-            justifyItems: "center",
-            flexWrap: "wrap",
-            width: "950px",
-          }}
-        >
+        <div className="Grid">
           {arr.map((_, i) => {
             const date = new Date(2021, month, i + 1);
             return (
