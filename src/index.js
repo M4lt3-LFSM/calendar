@@ -11,6 +11,7 @@ import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import purple from "@material-ui/core/colors/purple";
 import green from "@material-ui/core/colors/green";
+import { Navigation } from "./Navigation";
 
 const theme = createTheme({
   // components: {
@@ -72,20 +73,7 @@ ReactDOM.render(
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Provider store={store}>
         <Router>
-          <nav>
-            <ul>
-              <li>
-                <Link style={{ color: "inherit" }} to="/">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link style={{ color: "inherit" }} to="/calendar">
-                  Zum Kalender
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <Navigation></Navigation>
           <Switch>
             <Route exact path="/calendar">
               <Calendar />

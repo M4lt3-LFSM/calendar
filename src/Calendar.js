@@ -8,51 +8,30 @@ import { useDispatch, useSelector } from "react-redux";
 import DatePicker from "@material-ui/lab/DatePicker";
 
 export const Calendar = () => {
-  const [month, setMonth] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [value, setValue] = useState(new Date());
+  const [monthAndYear, setMonthAndYear] = useState(new Date());
 
-  const arr = new Array(new Date(2021, month + 1, 0).getDate()).fill("");
+  const arr = new Array(
+    new Date(2021, monthAndYear.getMonth() + 1, 0).getDate()
+  ).fill("");
   return (
     <div className="App ">
       <div>
         <h1>Kalender</h1>
         <DatePicker
           views={["year", "month"]}
-          label="Year and Month"
+          label="Jahr und Monat"
           minDate={new Date("2012-03-01")}
-          maxDate={new Date("2023-06-01")}
-          value={value}
+          maxDate={new Date("2023-12-31")}
+          value={monthAndYear}
           onChange={(date) => {
-            setValue(date);
+            setMonthAndYear(date);
           }}
-          renderInput={(params) => (
-            <TextField
-              style={{ color: "white" }}
-              inputProps={{ style: { color: "white" } }}
-              {...params}
-              helperText={null}
-            />
-          )}
+          renderInput={(params) => <TextField {...params} helperText={null} />}
         />
-        <label>Wähle einen Monat:</label>
-        <p id="Dropdown">
-          {/* <option value={0}>Januar</option>
-          <option value={1}>Februar</option>
-          <option value={2}>März</option>
-          <option value={3}>April</option>
-          <option value={4}>Mai</option>
-          <option value={5}>Juni</option>
-          <option value={6}>Juli</option>
-          <option value={7}>August</option>
-          <option value={8}>September</option>
-          <option value={9}>Oktober</option>
-          <option value={10}>November</option>
-          <option value={11}>Dezember</option> */}
-        </p>
         <div className="Grid">
           {arr.map((_, i) => {
-            const date = new Date(2021, month, i + 1);
+            const date = new Date(2021, monthAndYear.getMonth(), i + 1);
             return (
               <CalendarItem
                 dialogOpen={dialogOpen}
@@ -86,27 +65,31 @@ const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
       },
     });
     setText("");
+    handleClose();
+  };
+  const handleClose = () => {
+    dispatch({
+      type: "CHANGE_CURRENT_DATE",
+      payload: { date: null },
+    });
   };
   return (
-    <Dialog
-      onClose={() => {
-        dispatch({
-          type: "CHANGE_CURRENT_DATE",
-          payload: { date: null },
-        });
-      }}
-      open={currentDate !== null}
-    >
+    <Dialog fullWidth onClose={handleClose} open={currentDate !== null}>
       <DialogTitle style={{ textAlign: "center" }}>
         Termin für den {currentDate?.toLocaleDateString()}
       </DialogTitle>
-      <div style={{ margin: 100 }}>
+      <div style={{ margin: 20 }}>
         <TextField
+          style={{ width: "100%" }}
           value={text}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleBtnClick();
+            }
+          }}
           onChange={(e) => {
             setText(e.target.value);
           }}
-          multiline
           label="Termin"
         />
       </div>
