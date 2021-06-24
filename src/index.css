@@ -13,7 +13,7 @@ code {
 }
 
 #root {
-  height: 100vh;
+  height: 100%;
   background-color: #282c34;
   color: rgb(0, 247, 255);
 }
