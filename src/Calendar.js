@@ -9,10 +9,10 @@ import DatePicker from "@material-ui/lab/DatePicker";
 
 export const Calendar = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [monthAndYear, setMonthAndYear] = useState(new Date());
-
+  const dispatch = useDispatch();
+  const selectedDate = useSelector((state) => state.selectedDate);
   const arr = new Array(
-    new Date(2021, monthAndYear.getMonth() + 1, 0).getDate()
+    new Date(2021, selectedDate.getMonth() + 1, 0).getDate()
   ).fill("");
   return (
     <div className="App ">
@@ -23,15 +23,18 @@ export const Calendar = () => {
           label="Jahr und Monat"
           minDate={new Date("2012-03-01")}
           maxDate={new Date("2023-12-31")}
-          value={monthAndYear}
+          value={selectedDate}
           onChange={(date) => {
-            setMonthAndYear(date);
+            dispatch({
+              type: "CHANGE_SELECTED_DATE",
+              payload: { date },
+            });
           }}
           renderInput={(params) => <TextField {...params} helperText={null} />}
         />
         <div className="Grid">
           {arr.map((_, i) => {
-            const date = new Date(2021, monthAndYear.getMonth(), i + 1);
+            const date = new Date(2021, selectedDate.getMonth(), i + 1);
             return (
               <CalendarItem
                 dialogOpen={dialogOpen}
@@ -56,6 +59,7 @@ const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
   const currentDate = useSelector((state) => state.currentDate);
   const dispatch = useDispatch();
   const handleBtnClick = () => {
+    if (text === "") return;
     dispatch({
       type: "UPDATE_CALENDAR_DATA",
       payload: {
@@ -136,7 +140,22 @@ const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
     >
       {date.toLocaleDateString()}
       {textArr.map((text, index) => (
-        <p key={index}>{text}</p>
+        <>
+          <p key={index}>
+            {text}{" "}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch({
+                  type: "DELETE_CALENDAR_DATA",
+                  payload: { id: date.toLocaleDateString(), text },
+                });
+              }}
+            >
+              X
+            </button>
+          </p>
+        </>
       ))}
     </div>
   );

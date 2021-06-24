@@ -42,6 +42,8 @@ const store = createStore(
     eventsByDate: (state = {}, action) => {
       switch (action.type) {
         case "UPDATE_CALENDAR_DATA":
+          if (state[action.payload.id]?.text.includes(action.payload.text))
+            return state;
           return {
             ...state,
             [action.payload.id]: {
@@ -52,6 +54,20 @@ const store = createStore(
               ],
             },
           };
+        case "DELETE_CALENDAR_DATA":
+          const newState = { ...state };
+          newState[action.payload.id].text = newState[
+            action.payload.id
+          ].text.filter((x) => x !== action.payload.text);
+          return newState;
+        default:
+          return state;
+      }
+    },
+    selectedDate: (state = new Date(), action) => {
+      switch (action.type) {
+        case "CHANGE_SELECTED_DATE":
+          return action.payload.date;
         default:
           return state;
       }
