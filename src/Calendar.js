@@ -134,7 +134,6 @@ const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
         //   //   date.toLocaleDateString(),
         //   //   "Zahnarzt um 16:00"
         //   // );
-        // }
       }}
       className="Calendar-Item"
     >
