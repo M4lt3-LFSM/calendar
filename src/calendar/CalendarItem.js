@@ -1,10 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
-  // const [virtKey, setVirtKey] = useState(
-  //   window.localStorage.getItem(date.toLocaleDateString()) || null
-  // );
   const textArr = useSelector(
     (state) => state.eventsByDate[date.toLocaleDateString()]?.text ?? []
   );
@@ -16,17 +15,6 @@ export const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
           type: "CHANGE_CURRENT_DATE",
           payload: { date },
         });
-        // if (virtKey !== null) {
-        //   setVirtKey(null);
-        //   window.localStorage.removeItem(date.toLocaleDateString());
-        // } else {
-        //   setDialogOpen(true);
-        //   // setVirtKey("Zahnarzt um 16:00");
-        //   // window.localStorage.setItem(
-        //   //   date.toLocaleDateString(),
-        //   //   "Zahnarzt um 16:00"
-        //   // );
-        // }
       }}
       className="Calendar-Item"
     >
@@ -35,7 +23,7 @@ export const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
         <>
           <p key={index}>
             {text}{" "}
-            <button
+            <IconButton
               onClick={(e) => {
                 e.stopPropagation();
                 dispatch({
@@ -43,9 +31,10 @@ export const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
                   payload: { id: date.toLocaleDateString(), text },
                 });
               }}
+              aria-label="delete"
             >
-              X
-            </button>
+              <DeleteIcon />
+            </IconButton>
           </p>
         </>
       ))}
