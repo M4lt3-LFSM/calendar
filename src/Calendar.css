@@ -59,6 +59,17 @@ select {
   color: #fff;
   cursor: pointer;
 }
+
+button {
+  background: #2c3e50;
+  color: #00f7ff;
+}
+
+/* .css-1n2wfdu-MuiPaper-root-MuiDialog-paper {
+  background-color: #34495e !important;
+  color: aqua !important;
+} */
+
 /* Arrow */
 .select::after {
   content: "\25BC";

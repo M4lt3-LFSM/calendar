@@ -5,39 +5,50 @@ import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
+import DatePicker from "@material-ui/lab/DatePicker";
 
 export const Calendar = () => {
   const [month, setMonth] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [value, setValue] = useState(new Date());
 
   const arr = new Array(new Date(2021, month + 1, 0).getDate()).fill("");
   return (
     <div className="App ">
       <div>
         <h1>Kalender</h1>
+        <DatePicker
+          views={["year", "month"]}
+          label="Year and Month"
+          minDate={new Date("2012-03-01")}
+          maxDate={new Date("2023-06-01")}
+          value={value}
+          onChange={(date) => {
+            setValue(date);
+          }}
+          renderInput={(params) => (
+            <TextField
+              style={{ color: "white" }}
+              inputProps={{ style: { color: "white" } }}
+              {...params}
+              helperText={null}
+            />
+          )}
+        />
         <label>Wähle einen Monat:</label>
         <p id="Dropdown">
-          <select
-            onChange={(e) => {
-              setMonth(parseInt(e.target.value));
-            }}
-            value={month}
-            name="month"
-            id="month-select"
-          >
-            <option value={0}>Januar</option>
-            <option value={1}>Februar</option>
-            <option value={2}>März</option>
-            <option value={3}>April</option>
-            <option value={4}>Mai</option>
-            <option value={5}>Juni</option>
-            <option value={6}>Juli</option>
-            <option value={7}>August</option>
-            <option value={8}>September</option>
-            <option value={9}>Oktober</option>
-            <option value={10}>November</option>
-            <option value={11}>Dezember</option>
-          </select>
+          {/* <option value={0}>Januar</option>
+          <option value={1}>Februar</option>
+          <option value={2}>März</option>
+          <option value={3}>April</option>
+          <option value={4}>Mai</option>
+          <option value={5}>Juni</option>
+          <option value={6}>Juli</option>
+          <option value={7}>August</option>
+          <option value={8}>September</option>
+          <option value={9}>Oktober</option>
+          <option value={10}>November</option>
+          <option value={11}>Dezember</option> */}
         </p>
         <div className="Grid">
           {arr.map((_, i) => {
