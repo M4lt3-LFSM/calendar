@@ -2,42 +2,45 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { getAllEventsByDate } from "..";
 
-export const CalendarItem = ({ date, dialogOpen, setDialogOpen }) => {
-  const textArr = useSelector(
-    (state) => state.eventsByDate[date.toLocaleDateString()]?.text ?? []
-  );
+export const CalendarItem = ({ unix, dialogOpen, setDialogOpen }) => {
+  const eventDataArr = useSelector(getAllEventsByDate(unix));
   const dispatch = useDispatch();
+  const handleCalenderItemClick = () => {
+    dispatch({
+      type: "CHANGE_CURRENT_DATE",
+      payload: { unix },
+    });
+  };
+  const handleDeleteEvent = (e, eventData) => {
+    e.stopPropagation();
+    dispatch({
+      type: "DELETE_CALENDAR_DATA",
+      payload: { id: eventData.id },
+    });
+  };
   return (
-    <div
-      onClick={() => {
-        dispatch({
-          type: "CHANGE_CURRENT_DATE",
-          payload: { date },
-        });
-      }}
-      className="Calendar-Item"
-    >
-      {date.toLocaleDateString()}
-      {textArr.map((text, index) => (
-        <>
+    <div onClick={handleCalenderItemClick} className="Calendar-Item">
+      {new Date(unix).toLocaleDateString()}
+      {eventDataArr
+        .sort((a, b) => {
+          return a.id - b.id;
+        })
+        .map((eventData, index) => (
           <p key={index}>
-            {text}{" "}
+            {eventData.text}{" "}
+            {new Date(eventData.id)
+              .toLocaleTimeString()
+              .replace(/:\d\d$/, " Uhr")}
             <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                dispatch({
-                  type: "DELETE_CALENDAR_DATA",
-                  payload: { id: date.toLocaleDateString(), text },
-                });
-              }}
+              onClick={(e) => handleDeleteEvent(e, eventData)}
               aria-label="delete"
             >
               <DeleteIcon />
             </IconButton>
           </p>
-        </>
-      ))}
+        ))}
     </div>
   );
 };

@@ -4,32 +4,44 @@ import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
+import StaticTimePicker from "@material-ui/lab/StaticTimePicker";
 
 export const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
   const [text, setText] = useState("");
-  const currentDate = useSelector((state) => state.currentDate);
+  const currentUnix = useSelector((state) => state.currentUnix);
+  const currentDate = new Date(currentUnix);
+  const [currentTime, setCurrentTime] = useState(currentDate);
   const dispatch = useDispatch();
   const handleBtnClick = () => {
     if (text === "") return;
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      currentTime.getHours(),
+      currentTime.getMinutes()
+    );
     dispatch({
       type: "UPDATE_CALENDAR_DATA",
       payload: {
-        id: currentDate.toLocaleDateString(),
-        date: currentDate,
-        text: text,
+        id: date.getTime(),
+        date,
+        text,
       },
     });
-    setText("");
+
     handleClose();
   };
   const handleClose = () => {
     dispatch({
       type: "CHANGE_CURRENT_DATE",
-      payload: { date: null },
+      payload: { unix: null },
     });
+    setText("");
+    setCurrentTime(new Date());
   };
   return (
-    <Dialog fullWidth onClose={handleClose} open={currentDate !== null}>
+    <Dialog fullWidth onClose={handleClose} open={currentUnix !== null}>
       <DialogTitle style={{ textAlign: "center" }}>
         Termin für den {currentDate?.toLocaleDateString()}
       </DialogTitle>
@@ -48,6 +60,16 @@ export const CalendarDialog = ({ setDialogOpen, dialogOpen }) => {
           label="Termin"
         />
       </div>
+      <StaticTimePicker
+        displayStaticWrapperAs="mobile"
+        ampm={false}
+        value={currentTime}
+        onChange={(time) => {
+          setCurrentTime(time);
+        }}
+        renderInput={(params) => <TextField {...params} />}
+      />
+
       <Button
         onClick={handleBtnClick}
         variant="contained"

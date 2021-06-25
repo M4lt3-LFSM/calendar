@@ -45,17 +45,12 @@ const store = createStore(
     eventsByDate: (state = initialEventsByDate, action) => {
       switch (action.type) {
         case "UPDATE_CALENDAR_DATA":
-          if (state[action.payload.id]?.text.includes(action.payload.text))
-            return state;
+          // if (state[action.payload.id]?.text.includes(action.payload.text))
+          //   return state;
+
           const updatedState = {
             ...state,
-            [action.payload.id]: {
-              ...action.payload,
-              text: [
-                ...(state[action.payload.id]?.text ?? []),
-                action.payload.text,
-              ],
-            },
+            [action.payload.id]: action.payload,
           };
           window.localStorage.setItem(
             "eventsByDate",
@@ -64,9 +59,7 @@ const store = createStore(
           return updatedState;
         case "DELETE_CALENDAR_DATA":
           const deletedState = { ...state };
-          deletedState[action.payload.id].text = deletedState[
-            action.payload.id
-          ].text.filter((x) => x !== action.payload.text);
+          delete deletedState[action.payload.id];
           window.localStorage.setItem(
             "eventsByDate",
             JSON.stringify(deletedState)
@@ -84,10 +77,10 @@ const store = createStore(
           return state;
       }
     },
-    currentDate: (state = null, action) => {
+    currentUnix: (state = null, action) => {
       switch (action.type) {
         case "CHANGE_CURRENT_DATE":
-          return action.payload.date;
+          return action.payload.unix;
         default:
           return state;
       }
@@ -95,6 +88,13 @@ const store = createStore(
   }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+export const getAllEventsByDate = (unix) => (state) => {
+  const returnVal = Object.keys(state.eventsByDate)
+    .filter((x) => x - (x % 86400000) === unix - (unix % 86400000))
+    .map((x) => state.eventsByDate[x]);
+  return returnVal;
+};
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>

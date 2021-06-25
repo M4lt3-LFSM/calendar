@@ -67,7 +67,7 @@ export const Calendar = () => {
           minDate={new Date("2012-01-01")}
           maxDate={new Date("2023-12-31")}
           value={selectedDate}
-          onChange={handleChangeDatePicker}
+          onChange={(date) => handleChangeDatePicker(date)}
           renderInput={(params) => <TextField {...params} helperText={null} />}
         />
         <IconButton
@@ -100,7 +100,7 @@ export const Calendar = () => {
         </IconButton>
         <div className="Grid">
           {arr.map((_, i) => {
-            const date = new Date(
+            const unix = Date.UTC(
               selectedDate.getFullYear(),
               selectedDate.getMonth(),
               i + 1
@@ -110,7 +110,7 @@ export const Calendar = () => {
                 dialogOpen={dialogOpen}
                 setDialogOpen={setDialogOpen}
                 key={i}
-                date={date}
+                unix={unix}
               ></CalendarItem>
             );
           })}
