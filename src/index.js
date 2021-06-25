@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { Calendar } from "./calendar/Calendar";
+import { Home } from "./home/Home";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { combineReducers, createStore } from "redux";
@@ -106,7 +107,9 @@ ReactDOM.render(
             <Route exact path="/calendar">
               <Calendar />
             </Route>
-            <Route path="/">Home</Route>
+            <Route path="/">
+              <Home></Home>
+            </Route>
           </Switch>
         </Router>
       </Provider>
